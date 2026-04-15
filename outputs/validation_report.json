@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "checks": {
+    "has_lineage": true,
+    "has_schema": true,
+    "has_api": true
+  }
+}

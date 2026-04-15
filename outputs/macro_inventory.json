@@ -1,0 +1,73 @@
+{
+  "macros": [
+    {
+      "workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "embedded_vba_present": true,
+      "companion_sources": [
+        "/Users/diveysaini/Downloads/insurance_claims_dataset/NameSheetsFromAList_macro_source.txt"
+      ],
+      "procedures": [
+        {
+          "procedure": "NameSheetsFromAList",
+          "procedure_type": "Sub",
+          "reads": [
+            "1, 1",
+            "1,1",
+            "Rows.Count, 1",
+            "numiterations, 1"
+          ],
+          "writes": [],
+          "local_file_refs": [],
+          "raw_excerpt": "()\n\n    'iterate from 2 to last row count, name them. then name sheet 1\n    'then delete content of sheet 1\n\n    'list of sheet names headings should start from cells(1,1) of first sheet in the active workbook\n    'should not contain blank cells within the list.\n    'macro renames the first sheet with the value of first sheet's first cell from top left\n    \n    Sheets(1).Select\n    \n    Dim sname1 As String\n    Dim numberOfSheets As Integer\n    Dim numiterations As Integer\n    Dim sheetnamearay() As String\n    numberOfSheets = Cells(Rows.Count, 1).End(xlUp).Row\n    \n\n\n    sname1 = Cells(1, 1).Value\n    numiterations = 1\n    ReDim sheetnamearray(numberOfSheets)\n    \n    \n    For numiterations = 1 To numberOfSheets\n        sheetnamearray(numiterations - 1) = Cells(numiterations, 1).Value\n    Next numiterations\n    \n    For numiterations = 2 To numberOfSheets\n        'add number of elements in array - 1 sheets. name them.\n        ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(Acti"
+        }
+      ],
+      "embedded_vba_note": "Embedded VBA detected. Source extraction hook not implemented in this starter project. Extend MacroAnalyzer.extract_embedded_vba() for your preferred extractor."
+    },
+    {
+      "workbook": "Insurance_Claims_Master.xlsm",
+      "embedded_vba_present": true,
+      "companion_sources": [
+        "/Users/diveysaini/Downloads/insurance_claims_dataset/NameSheetsFromAList_macro_source.txt"
+      ],
+      "procedures": [
+        {
+          "procedure": "NameSheetsFromAList",
+          "procedure_type": "Sub",
+          "reads": [
+            "1, 1",
+            "1,1",
+            "Rows.Count, 1",
+            "numiterations, 1"
+          ],
+          "writes": [],
+          "local_file_refs": [],
+          "raw_excerpt": "()\n\n    'iterate from 2 to last row count, name them. then name sheet 1\n    'then delete content of sheet 1\n\n    'list of sheet names headings should start from cells(1,1) of first sheet in the active workbook\n    'should not contain blank cells within the list.\n    'macro renames the first sheet with the value of first sheet's first cell from top left\n    \n    Sheets(1).Select\n    \n    Dim sname1 As String\n    Dim numberOfSheets As Integer\n    Dim numiterations As Integer\n    Dim sheetnamearay() As String\n    numberOfSheets = Cells(Rows.Count, 1).End(xlUp).Row\n    \n\n\n    sname1 = Cells(1, 1).Value\n    numiterations = 1\n    ReDim sheetnamearray(numberOfSheets)\n    \n    \n    For numiterations = 1 To numberOfSheets\n        sheetnamearray(numiterations - 1) = Cells(numiterations, 1).Value\n    Next numiterations\n    \n    For numiterations = 2 To numberOfSheets\n        'add number of elements in array - 1 sheets. name them.\n        ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(Acti"
+        }
+      ],
+      "embedded_vba_note": "Embedded VBA detected. Source extraction hook not implemented in this starter project. Extend MacroAnalyzer.extract_embedded_vba() for your preferred extractor."
+    },
+    {
+      "workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "embedded_vba_present": true,
+      "companion_sources": [
+        "/Users/diveysaini/Downloads/insurance_claims_dataset/NameSheetsFromAList_macro_source.txt"
+      ],
+      "procedures": [
+        {
+          "procedure": "NameSheetsFromAList",
+          "procedure_type": "Sub",
+          "reads": [
+            "1, 1",
+            "1,1",
+            "Rows.Count, 1",
+            "numiterations, 1"
+          ],
+          "writes": [],
+          "local_file_refs": [],
+          "raw_excerpt": "()\n\n    'iterate from 2 to last row count, name them. then name sheet 1\n    'then delete content of sheet 1\n\n    'list of sheet names headings should start from cells(1,1) of first sheet in the active workbook\n    'should not contain blank cells within the list.\n    'macro renames the first sheet with the value of first sheet's first cell from top left\n    \n    Sheets(1).Select\n    \n    Dim sname1 As String\n    Dim numberOfSheets As Integer\n    Dim numiterations As Integer\n    Dim sheetnamearay() As String\n    numberOfSheets = Cells(Rows.Count, 1).End(xlUp).Row\n    \n\n\n    sname1 = Cells(1, 1).Value\n    numiterations = 1\n    ReDim sheetnamearray(numberOfSheets)\n    \n    \n    For numiterations = 1 To numberOfSheets\n        sheetnamearray(numiterations - 1) = Cells(numiterations, 1).Value\n    Next numiterations\n    \n    For numiterations = 2 To numberOfSheets\n        'add number of elements in array - 1 sheets. name them.\n        ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(Acti"
+        }
+      ],
+      "embedded_vba_note": "Embedded VBA detected. Source extraction hook not implemented in this starter project. Extend MacroAnalyzer.extract_embedded_vba() for your preferred extractor."
+    }
+  ]
+}

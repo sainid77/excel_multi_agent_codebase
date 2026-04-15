@@ -1,0 +1,29 @@
+{
+  "bundle_dir": "/Users/diveysaini/Downloads/insurance_claims_dataset",
+  "workbooks": [
+    {
+      "name": "Insurance_Benefits_Claims_Triage.xlsm",
+      "path": "/Users/diveysaini/Downloads/insurance_claims_dataset/Insurance_Benefits_Claims_Triage.xlsm",
+      "role": "benefits_triage",
+      "has_macros": true,
+      "has_external_links": false,
+      "domain_hint": "insurance_claims"
+    },
+    {
+      "name": "Insurance_Claims_Master.xlsm",
+      "path": "/Users/diveysaini/Downloads/insurance_claims_dataset/Insurance_Claims_Master.xlsm",
+      "role": "master_claims",
+      "has_macros": true,
+      "has_external_links": false,
+      "domain_hint": "insurance_claims"
+    },
+    {
+      "name": "Insurance_PnC_Claims_Audit.xlsm",
+      "path": "/Users/diveysaini/Downloads/insurance_claims_dataset/Insurance_PnC_Claims_Audit.xlsm",
+      "role": "audit_exceptions",
+      "has_macros": true,
+      "has_external_links": false,
+      "domain_hint": "insurance_claims"
+    }
+  ]
+}

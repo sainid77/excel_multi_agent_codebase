@@ -1,0 +1,44 @@
+{
+  "rules": [
+    {
+      "workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "rule_name": "summary_kpis",
+      "description": "Workbook computes claims KPIs from base transaction sheets."
+    },
+    {
+      "workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "rule_name": "trend_aggregation",
+      "description": "Workbook aggregates monthly claim or payment trends."
+    },
+    {
+      "workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "rule_name": "benefits_triage",
+      "description": "Workbook stores triage rules and provider-driven decision logic."
+    },
+    {
+      "workbook": "Insurance_Claims_Master.xlsm",
+      "rule_name": "summary_kpis",
+      "description": "Workbook computes claims KPIs from base transaction sheets."
+    },
+    {
+      "workbook": "Insurance_Claims_Master.xlsm",
+      "rule_name": "trend_aggregation",
+      "description": "Workbook aggregates monthly claim or payment trends."
+    },
+    {
+      "workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "rule_name": "summary_kpis",
+      "description": "Workbook computes claims KPIs from base transaction sheets."
+    },
+    {
+      "workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "rule_name": "trend_aggregation",
+      "description": "Workbook aggregates monthly claim or payment trends."
+    },
+    {
+      "workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "rule_name": "audit_exceptions",
+      "description": "Workbook contains audit-style exception detection outputs."
+    }
+  ]
+}

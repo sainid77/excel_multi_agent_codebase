@@ -1,0 +1,8 @@
+{
+  "bundle_dir": "/Users/diveysaini/Downloads/insurance_claims_dataset",
+  "output_dir": "/Users/diveysaini/Downloads/excel_multi_agent_codebase/excel_multi_agent_codebase/outputs",
+  "workbook_count": 3,
+  "formula_count": 1326,
+  "dependency_count": 3861,
+  "api_endpoint_count": 8
+}

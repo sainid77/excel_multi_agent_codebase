@@ -1,0 +1,18 @@
+# Core UI
+streamlit>=1.35.0
+pandas>=2.0.0
+pyvis>=0.3.2
+
+# Excel processing
+openpyxl>=3.1.5
+
+# Backend / API (used by your agents)
+fastapi>=0.116.0
+uvicorn>=0.35.0
+python-multipart>=0.0.20
+
+# Data modeling / validation
+pydantic>=2.11.0
+
+# Graph / dependency analysis
+networkx>=3.4.0

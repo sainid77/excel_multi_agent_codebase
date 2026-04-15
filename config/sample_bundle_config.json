@@ -1,0 +1,5 @@
+{
+  "bundle_dir": "/mnt/data/insurance_claims_dataset",
+  "output_dir": "/mnt/data/excel_multi_agent_outputs",
+  "recurse": false
+}

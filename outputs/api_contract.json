@@ -1,0 +1,86 @@
+{
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_Benefits_Claims_Triage.xlsm/claims/summary",
+      "purpose": "Return claims summary metrics derived from workbook tabs.",
+      "source_workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "depends_on": [
+        "Claims",
+        "Summary"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_Benefits_Claims_Triage.xlsm/payments/trends",
+      "purpose": "Return payment trend aggregates.",
+      "source_workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "depends_on": [
+        "Payments",
+        "Trends"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/workbooks/Insurance_Benefits_Claims_Triage.xlsm/benefits/triage",
+      "purpose": "Apply benefits triage rules to a claim payload.",
+      "source_workbook": "Insurance_Benefits_Claims_Triage.xlsm",
+      "depends_on": [
+        "Claims",
+        "Triage_Rules",
+        "Care_Providers"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_Claims_Master.xlsm/claims/summary",
+      "purpose": "Return claims summary metrics derived from workbook tabs.",
+      "source_workbook": "Insurance_Claims_Master.xlsm",
+      "depends_on": [
+        "Claims",
+        "Summary"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_Claims_Master.xlsm/payments/trends",
+      "purpose": "Return payment trend aggregates.",
+      "source_workbook": "Insurance_Claims_Master.xlsm",
+      "depends_on": [
+        "Payments",
+        "Trends"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_PnC_Claims_Audit.xlsm/claims/summary",
+      "purpose": "Return claims summary metrics derived from workbook tabs.",
+      "source_workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "depends_on": [
+        "Claims",
+        "Summary"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_PnC_Claims_Audit.xlsm/payments/trends",
+      "purpose": "Return payment trend aggregates.",
+      "source_workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "depends_on": [
+        "Payments",
+        "Trends"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/workbooks/Insurance_PnC_Claims_Audit.xlsm/audit/exceptions",
+      "purpose": "Return audit exception outputs.",
+      "source_workbook": "Insurance_PnC_Claims_Audit.xlsm",
+      "depends_on": [
+        "Claims",
+        "Exceptions",
+        "Summary"
+      ]
+    }
+  ]
+}
