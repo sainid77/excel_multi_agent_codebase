@@ -6,11 +6,21 @@ from typing import Any
 import zipfile
 
 from insurance_excel_agents.parsers.workbook_parser import WorkbookParser
+from insurance_excel_agents.loaders.local_loader import LocalFolderLoader
 
 
 @dataclass
 class WorkbookIntakeAgent:
     parser: WorkbookParser = WorkbookParser()
+
+    def run(self, bundle_dir, recurse=True):
+        loader = LocalFolderLoader(bundle_dir, recurse)
+        files = loader.list_files()
+
+        return {
+            "workbook_paths": [str(f) for f in files],
+            "count": len(files),
+        }
 
     def run(self, bundle_dir: Path, recurse: bool = False) -> dict[str, Any]:
         allowed_exts = {".xlsx", ".xlsm", ".xlsb", ".xltx", ".xltm"}

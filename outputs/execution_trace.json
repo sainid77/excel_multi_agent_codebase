@@ -3028,6 +3028,14 @@
       "writes": [],
       "external_calls": [],
       "step_type": "macro_execution"
+    },
+    {
+      "procedure": null,
+      "module": null,
+      "reads": [],
+      "writes": [],
+      "external_calls": [],
+      "step_type": "macro_execution"
     }
   ],
   "dependencies": [
@@ -41493,6 +41501,16 @@
     },
     {
       "dependency_type": "embedded_vba",
+      "source": "Insurance Claim Reserving.xlsm",
+      "target": "vbaProject.bin",
+      "relationship": "contains_embedded_macro_project",
+      "confidence": 1.0,
+      "metadata": {
+        "workbook": "Insurance Claim Reserving.xlsm"
+      }
+    },
+    {
+      "dependency_type": "embedded_vba",
       "source": "Insurance_Benefits_Claims_Triage.xlsm",
       "target": "vbaProject.bin",
       "relationship": "contains_embedded_macro_project",
@@ -41520,6 +41538,38 @@
       "metadata": {
         "workbook": "Insurance_PnC_Claims_Audit.xlsm"
       }
+    },
+    {
+      "dependency_type": "macro_to_range",
+      "source": "Insurance Claim Reserving.xlsm:NameSheetsFromAList",
+      "target": "1, 1",
+      "relationship": "macro_reads_range",
+      "confidence": 1.0,
+      "metadata": {}
+    },
+    {
+      "dependency_type": "macro_to_range",
+      "source": "Insurance Claim Reserving.xlsm:NameSheetsFromAList",
+      "target": "1,1",
+      "relationship": "macro_reads_range",
+      "confidence": 1.0,
+      "metadata": {}
+    },
+    {
+      "dependency_type": "macro_to_range",
+      "source": "Insurance Claim Reserving.xlsm:NameSheetsFromAList",
+      "target": "Rows.Count, 1",
+      "relationship": "macro_reads_range",
+      "confidence": 1.0,
+      "metadata": {}
+    },
+    {
+      "dependency_type": "macro_to_range",
+      "source": "Insurance Claim Reserving.xlsm:NameSheetsFromAList",
+      "target": "numiterations, 1",
+      "relationship": "macro_reads_range",
+      "confidence": 1.0,
+      "metadata": {}
     },
     {
       "dependency_type": "macro_to_range",
@@ -42424,8 +42474,8 @@
   "summary": {
     "input_count": 0,
     "formula_step_count": 500,
-    "macro_step_count": 3,
-    "dependency_count": 3861,
+    "macro_step_count": 4,
+    "dependency_count": 3866,
     "output_count": 200,
     "risk_count": 0
   }
