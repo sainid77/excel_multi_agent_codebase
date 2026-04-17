@@ -602,7 +602,7 @@ if search_prompt.strip():
         if mode_used == "summary":
             st.success("Summary generated")
         else:
-            st.success(f"Search completed using: {mode_used}")
+            st.success(f"Search completed")
         st.markdown("### AI Answer")
         st.info(answer)
 
