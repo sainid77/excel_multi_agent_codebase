@@ -1,30 +1,39 @@
-from __future__ import annotations
-
 import os
-from dataclasses import dataclass
-
-from dotenv import load_dotenv
+import time
 from openai import OpenAI
 
-load_dotenv()
 
-
-@dataclass
 class LLMClient:
-    model: str = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    def __init__(self, model: str = "gpt-4o-mini"):
+        self.model = model
 
-    def __post_init__(self) -> None:
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY is not set.")
+            raise ValueError("OPENAI_API_KEY not set")
+
         self.client = OpenAI(api_key=api_key)
 
-    def complete(self, system_prompt: str, user_prompt: str) -> str:
-        response = self.client.responses.create(
+    def chat(self, messages, temperature: float = 0.2, max_tokens: int = 1500):
+        response = self.client.chat.completions.create(
             model=self.model,
-            input=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
-            ],
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens,
         )
-        return response.output_text
+        return response.choices[0].message.content
+
+    def safe_chat(self, messages, retries=3):
+        for i in range(retries):
+            try:
+                return self.chat(messages)
+            except Exception as e:
+                if i == retries - 1:
+                    raise e
+                time.sleep(2)
+
+    def generate(self, system_prompt: str, user_prompt: str):
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ]
+        return self.safe_chat(messages)

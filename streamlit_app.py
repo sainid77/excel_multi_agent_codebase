@@ -8,8 +8,62 @@ from typing import Any
 
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 from pyvis.network import Network
+
+import os
+from openai import OpenAI
+
+
+# ==========================
+# CONFIG
+# ==========================
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    st.error("OPENAI_API_KEY not set. Please export it.")
+    st.stop()
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
+# ==========================
+def load_metadata():
+    # Replace this with actual JSON outputs from your agents
+    data = {
+        "workbooks": [
+            {"name": "Insurance_Claims_Master.xlsm", "category": "insurance"},
+            {"name": "Financial_Model.xlsm", "category": "financial"},
+            {"name": "General_Report.xlsm", "category": "other"}
+        ],
+        "formulas": ["SUM(A1:A10)", "VLOOKUP(...)"],
+        "macros": ["CalculatePremium", "ValidateClaims"],
+        "dependencies": ["Sheet1 -> Sheet2", "WorkbookA -> WorkbookB"]
+    }
+    return data
+
+
+metadata = load_metadata()
+
+# ==========================
+# GPT SEARCH FUNCTION
+# ==========================
+def gpt_search(prompt, metadata):
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are an Excel analysis assistant. Only return structured insights about workbooks, sheets, formulas, macros, and dependencies."},
+                {"role": "user", "content": f"Metadata:\n{json.dumps(metadata)}\n\nUser Query:\n{prompt}"}
+            ],
+            temperature=0.2
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"GPT search failed: {str(e)}"
+
+# ==========================
+# UI
+# ==========================
+st.title("📊 Excel Multi-Agentic AI Search")
 
 # Make local package importable
 sys.path.append(str(Path(__file__).parent / "src"))
@@ -21,6 +75,7 @@ try:
     from insurance_excel_agents.config import AnalysisConfig
     from insurance_excel_agents.orchestrator import Orchestrator
     from insurance_excel_agents.llm.search_agent import SearchAgent
+    from insurance_excel_agents.llm.client import LLMClient
 
     BACKEND_AVAILABLE = True
 except Exception as exc:
@@ -28,7 +83,7 @@ except Exception as exc:
 
 
 st.set_page_config(
-    page_title="Excel Agentic AI",
+    page_title="Excel Multi-Agentic AI",
     page_icon="📊",
     layout="wide",
 )
@@ -422,34 +477,14 @@ def render_network(nodes_df: pd.DataFrame, edges_df: pd.DataFrame, title: str, h
             arrows="to",
         )
 
-    options = {
-        "interaction": {
-            "hover": True,
-            "navigationButtons": True,
-            "keyboard": True,
-        },
-        "physics": {
-            "stabilization": False,
-        },
-        "nodes": {
-            "font": {"size": 12, "face": "Arial"},
-            "borderWidth": 1,
-        },
-        "edges": {
-            "font": {"size": 10, "align": "middle"},
-            "smooth": {"type": "dynamic"},
-        },
-    }
-
-    net.set_options(json.dumps(options))
-    components.html(net.generate_html(), height=height + 20, scrolling=True)
+    html_path = Path(tempfile.gettempdir()) / "pyvis_graph.html"
+    net.write_html(str(html_path))
+    st.iframe(str(html_path), height=height, width="stretch")
 
 
 def try_run_orchestrator(uploaded_files) -> dict[str, Any]:
     if not BACKEND_AVAILABLE:
-        raise RuntimeError(
-            f"Backend imports failed. Reason: {BACKEND_IMPORT_ERROR}"
-        )
+        raise RuntimeError(f"Backend imports failed. Reason: {BACKEND_IMPORT_ERROR}")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         bundle_dir = Path(tmpdir) / "bundle"
@@ -471,19 +506,41 @@ def try_run_orchestrator(uploaded_files) -> dict[str, Any]:
         return orchestrator.run_full(config)
 
 
-def ai_search(results: dict[str, Any], query: str) -> dict[str, Any]:
-    """
-    AI-only search.
-    No keyword fallback.
-    Works for both SAMPLE_RESULTS and live uploaded-file results,
-    but requires SearchAgent backend to be importable.
-    """
+def ai_workbook_search(results: dict[str, Any], query: str) -> dict[str, Any]:
     if not BACKEND_AVAILABLE:
-        raise RuntimeError(
-            f"AI search backend is unavailable. Import error: {BACKEND_IMPORT_ERROR}"
+        raise RuntimeError(f"AI search backend is unavailable. Import error: {BACKEND_IMPORT_ERROR}")
+
+    llm = LLMClient()
+    agent = SearchAgent(llm)
+
+    # 🔥 Detect summary intent
+    summary_keywords = ["summary", "summarize", "overview", "explain", "describe"]
+    is_summary = any(k in query.lower() for k in summary_keywords)
+
+    if is_summary:
+        # 🔥 Direct LLM summarization (bypass structured agent)
+        system_prompt = (
+            "You are an Excel intelligence assistant. "
+            "Provide a clear, structured executive summary of the dataset. "
+            "Focus on workflows, dependencies, macros, and business logic."
         )
 
-    agent = SearchAgent()
+        user_prompt = f"""
+        DATA:
+        {json.dumps(results)}
+
+        USER QUERY:
+        {query}
+        """
+
+        answer = llm.generate(system_prompt, user_prompt)
+
+        return {
+            "answer": answer,
+            "mode": "summary"
+        }
+
+    # 🔁 Default agent search
     return agent.run(results=results, query=query)
 
 
@@ -506,7 +563,7 @@ with st.sidebar:
         accept_multiple_files=True,
     )
 
-    run_clicked = st.button("Run multi-agent pipeline", type="primary", use_container_width=True)
+    run_clicked = st.button("Run multi-agent pipeline", type="primary", width="stretch")
 
     st.markdown("---")
     st.caption(f"Backend available: {BACKEND_AVAILABLE}")
@@ -529,36 +586,39 @@ if run_clicked:
 
 results = st.session_state.results
 
-st.subheader("AI Search Across Excel")
+
+st.subheader("AI Workbook Search")
 search_prompt = st.text_input(
-    "Ask anything about dependencies, formulas, lineage, macros, workbooks, sheets, files, APIs, or NLP summary",
+    "Search workbooks, sheets, dependencies, formulas, or macros",
     placeholder="e.g. Which workbook depends on audit inputs? Show reserve formulas. Which macro runs forecast logic?",
 )
-
 if search_prompt.strip():
     try:
-        ai_result = ai_search(results, search_prompt)
+        ai_result = ai_workbook_search(results, search_prompt)
         answer = ai_result.get("answer", "No answer generated.")
         match_tables = ai_result.get("matches", {}) or {}
         mode_used = ai_result.get("mode", "llm")
 
-        st.success(f"Search completed using: {mode_used}")
-        st.markdown("### Search Results")
-        st.write(answer)
+        if mode_used == "summary":
+            st.success("Summary generated")
+        else:
+            st.success(f"Search completed using: {mode_used}")
+        st.markdown("### AI Answer")
+        st.info(answer)
 
         if match_tables:
-            st.markdown("### Supporting Matches")
+            st.markdown("### Matching Results")
             for i, (section_name, df) in enumerate(match_tables.items()):
                 if isinstance(df, pd.DataFrame):
                     with st.expander(f"{section_name} ({len(df)})", expanded=(i == 0)):
-                        st.dataframe(df, use_container_width=True, hide_index=True)
+                        st.dataframe(df, width="stretch", hide_index=True)
                 elif isinstance(df, list):
                     with st.expander(f"{section_name} ({len(df)})", expanded=(i == 0)):
-                        st.dataframe(pd.DataFrame(df), use_container_width=True, hide_index=True)
+                        st.dataframe(pd.DataFrame(df), width="stretch", hide_index=True)
         else:
-            st.info("No structured supporting matches found.")
+            st.info("No structured matches found.")
     except Exception as exc:
-        st.error(f"AI search failed: {exc}")
+        st.error(f"AI workbook search failed: {exc}")
 
 st.markdown("---")
 
@@ -590,18 +650,10 @@ with left:
 
     st.subheader("Detected Workbooks")
     workbook_df = pd.DataFrame({"Workbook": results.get("workbook_paths", [])})
-    st.dataframe(workbook_df, use_container_width=True, hide_index=True)
+    st.dataframe(workbook_df, width="stretch", hide_index=True)
 
     st.subheader("Generated API Catalog")
-    api_search = st.text_input("Search APIs", placeholder="claims, forecast, reserves...")
-    filtered_api_df = api_df.copy()
-    if api_search:
-        mask = filtered_api_df.apply(
-            lambda r: api_search.lower() in " ".join(map(str, r.values)).lower(),
-            axis=1,
-        )
-        filtered_api_df = filtered_api_df[mask]
-    st.dataframe(filtered_api_df, use_container_width=True, hide_index=True)
+    st.dataframe(api_df, width="stretch", hide_index=True)
 
 with right:
     st.subheader("Macro Procedures")
@@ -610,7 +662,7 @@ with right:
         macro_names = [m.get("name", str(m)) if isinstance(m, dict) else str(m) for m in macros]
         st.dataframe(
             pd.DataFrame({"Procedure": macro_names}),
-            use_container_width=True,
+            width="stretch",
             hide_index=True,
         )
     else:
@@ -628,9 +680,9 @@ render_network(entity_nodes_df, entity_edges_df, "Entity Network Graph")
 
 with st.expander("Show all entity nodes and edges"):
     st.markdown("**Nodes**")
-    st.dataframe(entity_nodes_df, use_container_width=True, hide_index=True)
+    st.dataframe(entity_nodes_df, width="stretch", hide_index=True)
     st.markdown("**Edges**")
-    st.dataframe(entity_edges_df, use_container_width=True, hide_index=True)
+    st.dataframe(entity_edges_df, width="stretch", hide_index=True)
 
 st.subheader("Workbook Interconnection Flow")
 wb_nodes_df, wb_edges_df = build_workbook_flow_nodes_edges(results)
@@ -638,7 +690,7 @@ render_network(wb_nodes_df, wb_edges_df, "Workbook Flow Graph")
 
 with st.expander("Show workbook flow edges"):
     flow_df = workbook_flow_details_df(results)
-    st.dataframe(flow_df, use_container_width=True, hide_index=True)
+    st.dataframe(flow_df, width="stretch", hide_index=True)
 
 with st.expander("Show business rules"):
     st.json(results.get("business_rules", {}))
@@ -651,6 +703,62 @@ with st.expander("Show full results JSON"):
 
 st.markdown("---")
 st.caption(
-    "Demo UI for stakeholder review. AI search is enforced in both sample mode and uploaded-file mode. "
-    "If backend imports fail, the app shows the real import error instead of falling back to keyword search."
+    "Demo UI for stakeholder review. AI workbook search supports workbook, formula, macro, dependency, lineage, and summary discovery."
 )
+
+def infer_workbook_label(workbook_name: str) -> str:
+    name = workbook_name.lower()
+
+    insurance_keywords = [
+        "insurance", "claim", "claims", "audit", "triage", "benefits", "policy", "reserve"
+    ]
+    financial_keywords = [
+        "finance", "financial", "revenue", "budget", "forecast", "cash", "pnl", "profit", "loss"
+    ]
+
+    if any(k in name for k in insurance_keywords):
+        return "Insurance"
+    if any(k in name for k in financial_keywords):
+        return "Financial"
+    return "Other"
+
+
+def workbook_classification_df(results: dict[str, Any]) -> pd.DataFrame:
+    workbooks = results.get("workbook_paths", []) or []
+
+    if not workbooks:
+        return pd.DataFrame(columns=["Label", "Count"])
+
+    rows = []
+    for wb in workbooks:
+        rows.append(
+            {
+                "Workbook": wb,
+                "Label": infer_workbook_label(wb),
+            }
+        )
+
+    df = pd.DataFrame(rows)
+    out = df.groupby("Label", as_index=False).size()
+    out.columns = ["Label", "Count"]
+    return out
+
+st.subheader("Workbook Classification")
+
+classification_df = workbook_classification_df(results)
+
+if not classification_df.empty:
+    chart_df = classification_df.set_index("Label")
+    st.bar_chart(chart_df)
+    with st.expander("Show workbook classification details"):
+        workbook_rows = []
+        for wb in results.get("workbook_paths", []) or []:
+            workbook_rows.append(
+                {
+                    "Workbook": wb,
+                    "Label": infer_workbook_label(wb),
+                }
+            )
+        st.dataframe(pd.DataFrame(workbook_rows), width="stretch", hide_index=True)
+else:
+    st.info("No workbook classification data available.")
