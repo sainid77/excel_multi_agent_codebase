@@ -539,10 +539,21 @@ USER QUERY:
 # ==========================
 # SIDEBAR
 # ==========================
-st.title("📊 JanuX: Multi-Agentic AI Excel Search and Transformation")
-st.caption(
-    "Upload Excel workbooks and generate Summary, dependency graphs, cross-workbook flow, identify business rules and API catalog"
-)
+col1, col2 = st.columns([1, 8])
+
+with col1:
+    st.image("assets/logo.png", width=70)
+
+with col2:
+    st.markdown(
+        "<h1 style='margin-bottom:5px;'>JanuX: Multi-Agentic AI Excel Search and Transformation</h1>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        "<p style='color:#9ca3af; font-size:16px;'>Upload Excel workbooks and generate Summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
+        unsafe_allow_html=True
+    )
 
 with st.sidebar:
     st.subheader("Run Mode")
