@@ -13,8 +13,8 @@ from openai import OpenAI
 from pyvis.network import Network
 
 st.set_page_config(
-    page_title="Excel Multi-Agentic AI",
-    page_icon="📊",
+    page_title="JanX",
+    page_icon=str(Path(__file__).parent / "assets/logo.png"),
     layout="wide",
 )
 
@@ -541,21 +541,24 @@ USER QUERY:
 # ==========================
 col1, col2 = st.columns([1, 8])
 
-with col1:
-    st.image("assets/logo.png", width=140)
 
 with col2:
     st.markdown(
-        "<h1 style='margin-bottom:5px;'>JanuX: Multi-Agentic AI Excel Search and Transformation</h1>",
+        "<h1 style='margin-bottom:5px;'>JanuX: AI Excel Intelligence and Transformation</h1>",
         unsafe_allow_html=True
     )
 
     st.markdown(
-        "<p style='color:#9ca3af; font-size:16px;'>Upload Excel workbooks and generate Summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
+        "<p style='color:#9ca3af; font-size:16px;'>Upload Excel workbooks and generate summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
         unsafe_allow_html=True
     )
 
 with st.sidebar:
+
+    st.image("assets/logo.png", width=140)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     st.subheader("Run Mode")
     mode = st.radio(
         "Choose mode",
