@@ -13,10 +13,18 @@ from openai import OpenAI
 from pyvis.network import Network
 
 st.set_page_config(
-    page_title="JanX",
+    page_title="JanuX",
     page_icon=str(Path(__file__).parent / "assets/logo.png"),
     layout="wide",
 )
+
+st.markdown("""
+<style>
+h1, h2, h3 {
+    color: #0b2a66 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # Make local package importable
 sys.path.append(str(Path(__file__).parent / "src"))
@@ -539,8 +547,7 @@ USER QUERY:
 # ==========================
 # SIDEBAR
 # ==========================
-col1, col2 = st.columns([1, 8])
-
+_, col2 = st.columns([1, 8])
 
 with col2:
     st.markdown(
@@ -554,12 +561,10 @@ with col2:
     )
 
 with st.sidebar:
-
-    st.image("assets/logo.png", width=140)
-
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.image("assets/logo.png", width=280)
 
     st.subheader("Run Mode")
+
     mode = st.radio(
         "Choose mode",
         options=["Use sample demo", "Run with uploaded files"],
@@ -567,14 +572,24 @@ with st.sidebar:
         key="sidebar_mode",
     )
 
+    st.markdown(
+        "<div style='color:black; font-weight:600; margin-top:10px; margin-bottom:6px;'>Upload Excel files</div>",
+        unsafe_allow_html=True,
+    )
+
     uploaded_files = st.file_uploader(
         "Upload Excel files",
         type=["xlsx", "xlsm", "xlsb"],
         accept_multiple_files=True,
         key="sidebar_uploader",
+        label_visibility="collapsed",
     )
 
-    run_clicked = st.button("Run multi-agent pipeline", type="primary", use_container_width=True)
+    run_clicked = st.button(
+        "Run multi-agent pipeline",
+        type="primary",
+        use_container_width=True,
+    )
 
     st.markdown("---")
     st.caption(f"Backend available: {BACKEND_AVAILABLE}")
