@@ -20,9 +20,109 @@ st.set_page_config(
 
 st.markdown("""
 <style>
+
+/* Search box text (what user types) */
+input {
+    color: white !important;
+}
+
+/* Placeholder text (e.g. AI Workbook Search...) */
+input::placeholder {
+    color: white !important;
+    opacity: 1 !important;
+}
+
+/* Also support textarea if used */
+textarea {
+    color: white !important;
+}
+
+textarea::placeholder {
+    color: white !important;
+    opacity: 1 !important;
+}
+
+/* Optional: make input background darker for contrast */
+input, textarea {
+    background-color: #1e293b !important;
+    border-radius: 8px !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
 h1, h2, h3 {
     color: #0b2a66 !important;
 }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
+/* Make ONLY the primary button green */
+.stButton > button[kind="primary"] {
+    background-color: #16a34a !important;  /* green */
+    color: white !important;
+    border: none !important;
+}
+
+/* Hover effect (optional but nice) */
+.stButton > button[kind="primary"]:hover {
+    background-color: #15803d !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
+/* Make ALL sidebar radio buttons white */
+section[data-testid="stSidebar"] input[type="radio"] {
+    accent-color: white !important;
+}
+
+/* Ensure selected state stays white */
+section[data-testid="stSidebar"] input[type="radio"]:checked {
+    accent-color: white !important;
+}
+
+/* Keep labels white for consistency */
+section[data-testid="stSidebar"] label {
+    color: white !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+
+/* Smooth scale instead of font jump */
+button[data-baseweb="tab"] {
+    transform: scale(1);
+    transition: transform 0.2s ease-in-out;
+}
+
+button[data-baseweb="tab"]:hover {
+    transform: scale(1.15);
+}
+
+button[data-baseweb="tab"][aria-selected="true"] {
+    transform: scale(1.05);
+}
+
 </style>
 """, unsafe_allow_html=True)
 
