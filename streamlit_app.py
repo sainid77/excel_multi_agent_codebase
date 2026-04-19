@@ -647,17 +647,16 @@ USER QUERY:
 # ==========================
 # SIDEBAR
 # ==========================
-_, col2 = st.columns([1, 8])
+#_, col2 = st.columns([1, 8])
 
-with col2:
-    st.markdown(
-        "<h1 style='margin-bottom:5px;'>JanuX: AI Excel Intelligence and Transformation</h1>",
-        unsafe_allow_html=True
+st.markdown(
+    "<h1 style='margin-bottom:5px;'>JanuX: AI Excel Intelligence and Transformation</h1>",
+    unsafe_allow_html=True
     )
 
-    st.markdown(
-        "<p style='color:#9ca3af; font-size:16px;'>Upload Excel workbooks and generate summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
-        unsafe_allow_html=True
+st.markdown(
+    "<p style='color:#000000; font-size:20px;'>Upload Excel workbooks and generate summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
+    unsafe_allow_html=True
     )
 
 with st.sidebar:
