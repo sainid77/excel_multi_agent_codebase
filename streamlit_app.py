@@ -650,14 +650,14 @@ USER QUERY:
 #_, col2 = st.columns([1, 8])
 
 st.markdown(
-    "<h1 style='margin-bottom:5px;'>JanuX: AI Excel Intelligence and Transformation</h1>",
+    "<h1 style='margin-bottom:8px; color:#0b2a66; font-size:3rem; font-weight:700;'>JanuX: AI Excel Intelligence and Transformation</h1>",
     unsafe_allow_html=True
-    )
+)
 
 st.markdown(
-    "<p style='color:#000000; font-size:20px;'>Upload Excel workbooks and generate summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
+    "<p style='color:#111827; font-size:18px; margin-top:0; margin-bottom:24px; line-height:1.5;'>Upload Excel workbooks and generate summary, dependency graphs, cross-workbook flow, identify business rules and API catalog</p>",
     unsafe_allow_html=True
-    )
+)
 
 with st.sidebar:
     st.image("assets/logo.png", width=280)
